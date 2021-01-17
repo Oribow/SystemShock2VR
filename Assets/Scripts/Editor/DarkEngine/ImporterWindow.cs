@@ -147,14 +147,14 @@ namespace Assets.Scripts.Editor.DarkEngine
 
         private void ReadSelectedLevelsFromSettings() {
             isLevelSelected = levelFileRepo.FileNames().Select(
-                levelName => settings.selectedLevels.Contains(levelName.relativePath)).ToArray();
+                levelName => settings.selectedLevels.Contains(levelName.relativePath.ToLower())).ToArray();
         }
 
         private void WriteSelectedLevelsToSettings()
         {
             settings.selectedLevels = levelFileRepo.FileNames()
                 .Where((levelName, index) => isLevelSelected[index])
-                .Select(levelName => levelName.relativePath).ToList();
+                .Select(levelName => levelName.relativePath.ToLower()).ToList();
         }
     }
 }

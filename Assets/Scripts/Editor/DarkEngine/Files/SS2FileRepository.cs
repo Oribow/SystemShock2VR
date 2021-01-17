@@ -20,7 +20,7 @@ namespace Assets.Scripts.Editor.DarkEngine.Files
             foreach (var pathTuple in DataFiles(settings))
             {
                 var lowerFilePath = pathTuple.Item1.ToLower();
-                string key = pathTuple.Item1;
+                string key = pathTuple.Item1.ToLower();
                 if (!nameToPathMap.ContainsKey(key))
                 {
                     nameToPathMap.Add(key, pathTuple.Item2);
