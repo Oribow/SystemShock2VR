@@ -189,7 +189,7 @@ namespace Assets.Scripts.Editor.DarkEngine.DarkObjects
                 if (name == null)
                     return Parent.FullPath();
                 else
-                    return Parent.FullPath() + "/" + name;
+                    return Parent.FullPath() + "/" + name.Replace('/', '_').Replace(':', '_');
             }
             else
             {

@@ -10,7 +10,7 @@ namespace Assets.Scripts.Editor.DarkEngine.Files
         public bool IsObjectMesh(string modelName)
         {
             string filePath = nameToPathMap[modelName].relativePath;
-            return filePath.StartsWith("obj/");
+            return filePath.ToLower().StartsWith("obj/");
         }
 
         protected override IEnumerable<Tuple<string, SS2FileEntry>> DataFiles(ImporterSettings settings)

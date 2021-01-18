@@ -56,26 +56,34 @@ namespace Assets.Scripts.Editor.DarkEngine.Materials
             if (!textureFileRepo.DoesNameExist(name))
                 return new Tuple<Material, string>(missingTextureMat, null);
 
-            var texturePath = textureFileRepo.GetPath(name);
             Material mat;
-            if (textureFileRepo.IsMTL(texturePath.relativePath))
+            var texturePath = textureFileRepo.GetPath(name);
+            try
             {
-                var mtl = mtlRepo.Load(texturePath);
-                mat = null;
-                foreach (var creator in materialCreators)
+                if (textureFileRepo.IsMTL(texturePath.relativePath))
                 {
-                    if (creator.Match(mtl))
+                    var mtl = mtlRepo.Load(texturePath);
+                    mat = null;
+                    foreach (var creator in materialCreators)
                     {
-                        mat = creator.Create(mtl, tint, unitySS2AssetRepo);
-                        break;
+                        if (creator.Match(mtl))
+                        {
+                            mat = creator.Create(mtl, tint, unitySS2AssetRepo);
+                            break;
+                        }
                     }
                 }
+                else
+                {
+                    var tex = unitySS2AssetRepo.LoadAnyTextureAsset(PathUtility.FilePathWithoutExtension(texturePath.relativePath));
+                    var readableTex = textureFileLoader.Load(name).First().Item1;
+                    mat = singleTextureCreator.CreateMaterialFromSingleTexture(tex, readableTex, false, tint, emissive);
+                }
             }
-            else
+            catch (Exception e)
             {
-                var tex = unitySS2AssetRepo.LoadAnyTextureAsset(PathUtility.FilePathWithoutExtension(texturePath.relativePath));
-                var readableTex = textureFileLoader.Load(name).First().Item1;
-                mat = singleTextureCreator.CreateMaterialFromSingleTexture(tex, readableTex, false, tint, emissive);
+                Debug.LogError("Failed to create material for " + name);
+                return new Tuple<Material, string>(missingTextureMat, null);
             }
 
             mat.name = Path.GetFileNameWithoutExtension(texturePath.relativePath);

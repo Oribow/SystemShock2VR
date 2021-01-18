@@ -190,7 +190,8 @@ namespace Assets.Scripts.Editor.DarkEngine.Files
             if (tex != null)
                 return tex;
             tex = LoadTextureAsset(path);
-            Debug.Assert(tex != null, "Couldn't load texture at " + path);
+            if (tex == null)
+                Debug.Log("Couldn't load texture at " + path);
             return tex;
         }
 

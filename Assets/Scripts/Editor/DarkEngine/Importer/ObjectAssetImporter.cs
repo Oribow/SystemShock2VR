@@ -130,10 +130,13 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
             ImportObjectTextures(binMesh);
             foreach (var mesh in binMesh.Meshs())
             {
-                Unwrapping.GenerateSecondaryUVSet(mesh);
+                var up = new UnwrapParam();
+                UnwrapParam.SetDefaults(out up);
+                up.packMargin = 0.03f;
+                Unwrapping.GenerateSecondaryUVSet(mesh, up);
                 unitySS2AssetRepo.CreateMeshAsset(mesh, binMesh.IsObj);
             }
-            ImportObjectAnimations(darkObject, binMesh.IsObj);
+            //ImportObjectAnimations(darkObject, binMesh.IsObj);
         }
 
         private void ImportObjectPhase2(DarkObject darkObject)
@@ -180,7 +183,10 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
 
             if (!binFileRepo.DoesNameExist(modelName))
             {
-                if (modelName == "fx_particle")
+                if (modelName.StartsWith("fx_"))
+                    return null;
+
+                if (modelName.StartsWith("spark_"))
                     return null;
 
                 throw new KeyNotFoundException($"{modelName} not found");

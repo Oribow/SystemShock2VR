@@ -54,7 +54,6 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
                 }
 
                 darkObj.gameObject = g;
-                g.transform.SetParent(darkObj.Parent.gameObject.transform, false);
                 PrefabCreatorUtil.AdjustPosition(darkObj);
                 PrefabCreatorUtil.AddComments(darkObj);
             }
@@ -66,6 +65,13 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
                 {
                     processor.Process(i, darkObj, objectCollection);
                 }
+            }
+
+            for (int i = 0; i < objs.Length; i++)
+            {
+                var darkObj = objs[i];
+                GameObject g = darkObj.gameObject;
+                g.transform.SetParent(darkObj.Parent.gameObject.transform, true);
             }
         }
 

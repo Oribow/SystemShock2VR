@@ -111,7 +111,7 @@ namespace Assets.Scripts.Editor.DarkEngine.Models
             slotToMatIndex = new Dictionary<int, int>();
             for (int n = 0; n < header.num_mats; n++)
             {
-                slotToMatIndex.Add(materials[n].SlotNum, n);
+                slotToMatIndex[materials[n].SlotNum] = n;
             }
         }
 

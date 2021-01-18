@@ -2,6 +2,7 @@
 using Assets.Scripts.Editor.DarkEngine.Materials;
 using Pfim;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -66,14 +67,19 @@ namespace Assets.Scripts.Editor.DarkEngine.Textures
                         if (rp.texturePaths.Count == 1)
                         {
                             var texTuple = LoadTextureOnly(rp.texturePaths[0]);
+                            if (texTuple == null)
+                                return null;
                             return new Tuple<Texture, string>(texTuple.Item1, texTuple.Item2);
                         }
                         else
                         {
                             var texTuple = LoadTextureArray(rp.texturePaths);
+                            if (texTuple == null)
+                                return null;
                             return new Tuple<Texture, string>(texTuple.Item1, texTuple.Item2);
                         }
-                    }));
+                    })
+                    .Where(t => t != null));
             }
             else
             {

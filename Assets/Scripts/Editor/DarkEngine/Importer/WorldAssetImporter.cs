@@ -126,7 +126,16 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
 
         private void ImportCell(Cell cell, TextureList tl, string levelName)
         {
-            var mesh = cell.CreateMesh(tl, textureFileLoader);
+            Mesh mesh;
+            try
+            {
+                mesh = cell.CreateMesh(tl, textureFileLoader);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Creation of mesh for cell {cell.Name} failed, because {e}");
+                return;
+            }
             if (mesh == null)
                 return;
 

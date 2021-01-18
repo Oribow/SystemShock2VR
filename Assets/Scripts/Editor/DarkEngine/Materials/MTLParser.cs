@@ -83,7 +83,7 @@ namespace Assets.Scripts.Editor.DarkEngine.Materials
                                 {
                                     content = File.ReadAllText(path).Replace('\r', '\n');
                                 }
-                                catch (FileNotFoundException)
+                                catch (IOException)
                                 {
                                     content = "";
                                     Debug.LogError("Couldn't find mtl incl: " + path);
@@ -247,6 +247,9 @@ namespace Assets.Scripts.Editor.DarkEngine.Materials
 
         private static IEnumerable<string> TexturePathsFromNumSeq(string mod, int limit, string basePath, TextureFileRepository textureFileRepo)
         {
+            // base path may be in ""
+            basePath = basePath.Replace("\"", "");
+
             yield return basePath;
 
             var stack = new Stack<char>();

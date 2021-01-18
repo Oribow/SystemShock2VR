@@ -129,7 +129,7 @@ namespace Assets.Scripts.Editor.DarkEngine.World
                     Vector2[] uv_light = new Vector2[32];
 
                     // base vertex - texturing origin
-                    Vector3 origin = this.vertices[this.polyIndices[polyNum][faceInfos[polyNum].originVertex]];
+                    Vector3 origin = this.vertices[this.polyIndices[polyNum][faceInfos[polyNum].originVertex % polyIndices[polyNum].Length]];
 
                     uint plane = faceMaps[polyNum].planeId;
 
@@ -253,7 +253,7 @@ namespace Assets.Scripts.Editor.DarkEngine.World
             {
                 var up = new UnwrapParam();
                 UnwrapParam.SetDefaults(out up);
-                up.angleError = 79;
+                up.packMargin = 0.02f;
                 Unwrapping.GenerateSecondaryUVSet(mesh, up);
             }
 
