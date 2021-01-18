@@ -80,7 +80,8 @@ Finally click on **Load Object Tree** to load all objects from the first selecte
 
 Congrats, you just imported your first level!
 
-NOTE: This has only been tested with the earth level. It may NOT work for other levels. It may produce weird effects, like see through walls. 
+NOTE: This has been tested with every SS2 level and works alright. 
+If you are getting blank materials, please import the materials again to try and fix it. When textures and materials are imported in one go, materials may loose the reference to the assigned texture. Reimporting with textures present and override flags set to "material" can help.
 
 **Override enabled** is a flag field. If a flag is set, the importer will overwrite already imported assets of that type. If it is not set, those assets will not be overwriten.
 
