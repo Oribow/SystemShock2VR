@@ -15,7 +15,7 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
     {
         public void ApplyFlags(DarkObject darkObject, HashSet<Type> flags)
         {
-            if (darkObject.GetParentWithId(-2502) != null)
+            if (darkObject.GetParentWithId(-305) != null)
             {
                 flags.Add(typeof(TripWireCreator));
                 flags.Add(typeof(FallbackCreator));
@@ -44,13 +44,15 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
                 so.ApplyModifiedPropertiesWithoutUndo();
             }
 
+            PrefabCreatorUtil.AdjustPosition(darkObject);
+            g.transform.localScale = Vector3.one;
             PrefabCreatorUtil.ApplyCollider(darkObject);
             darkObject.GetComponent<Collider>().isTrigger = true;
 
             var state = darkObject.GetProp<PhysStateProp>();
             g.transform.localPosition = state.location;
-            if (state.facing != Vector3.zero)
-                g.transform.localRotation = Quaternion.LookRotation(state.facing);
+            /*if (state.facing != Vector3.zero)
+                g.transform.localRotation = Quaternion.LookRotation(state.facing) * g.transform.localRotation;*/
         }
     }
 }

@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Assets.Scripts.Player;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Events.Devices
 {
-    public class PlayerTeleportPoint : BasicEventReceiver
+    public class PlayerTeleportPoint : MonoBehaviour, IEventReceiver
     {
-        public override void Receive(BasicEventSender sender, DarkEvent darkEvent)
+        public void Receive(IEventSender sender, DarkEvent darkEvent)
         {
-            throw new NotImplementedException();
-            /*
             if (darkEvent.State)
             {
                 RaycastHit hit;
@@ -18,14 +17,14 @@ namespace Assets.Scripts.Events.Devices
 
                 if (hit.collider != null)
                 {
-                    PlayerController.Instance.TeleportTo(hit.point, transform.rotation);
+                    PlayerHolder.Instance.PlayerController.TeleportTo(hit.point, 1f);
                 }
                 else
                 {
-                    PlayerController.Instance.TeleportTo(transform.position, transform.rotation);
+                    PlayerHolder.Instance.PlayerController.TeleportTo(transform.position, 1f);
                 }
 
-            }*/
+            }
         }
     }
 }

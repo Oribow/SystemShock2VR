@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Editor.DarkEngine.DarkObjects;
 using Assets.Scripts.Editor.DarkEngine.DarkObjects.DarkProps;
 using Assets.Scripts.Editor.DarkEngine.Files;
+using Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator;
 using Assets.Scripts.Events;
 using System;
 using System.Collections.Generic;
@@ -28,21 +29,28 @@ namespace Assets.Scripts.Editor.DarkEngine.ObjectInstantanceAdjusters
             if (darkObject.HasPropDirectly<ModelNameProp>())
                 InstanceAdjustorUtil.ChangeModelAt(darkObject, unitySS2AssetRepo, binFileRepo);
 
-            if (darkObject.HasPropDirectly<RenderTypeProp>())
-            {
-                var renderType = darkObject.GetProp<RenderTypeProp>().Value;
-                if (renderType == RenderType.NotRendered || renderType == RenderType.EditorOnly)
-                {
-                    var mrs = darkObject.gameObject.GetComponentsInChildren<MeshRenderer>();
-                    foreach (var mr in mrs)
-                        mr.enabled = false;
-                }
-            }
+            var renderType = darkObject.GetProp<RenderTypeProp>();
+            var hasRefs = darkObject.GetProp<HasRefsProp>();
 
-            if ((!darkObject.HasPropDirectly<ImmobileProp>() || darkObject.GetProp<ImmobileProp>().Value))
+            bool disableRenders = darkObject.GetParentWithId(-4581) != null ||
+                (hasRefs != null && !hasRefs.Value) ||
+                (renderType != null && (renderType.Value == RenderType.NotRendered || renderType.Value == RenderType.EditorOnly));
+            if (disableRenders)
+                DisableRenderes(darkObject.gameObject);
+
+            PrefabCreatorUtil.ApplyCollider(darkObject);
+
+            if (GameObjectUtility.GetStaticEditorFlags(darkObject.gameObject) != 0 && (!darkObject.HasPropDirectly<ImmobileProp>() || darkObject.GetProp<ImmobileProp>().Value))
             {
                 GameObjectUtility.SetStaticEditorFlags(darkObject.gameObject, ImporterSettings.staticFlags);
             }
+        }
+
+        private void DisableRenderes(GameObject g)
+        {
+            var mrs = g.GetComponentsInChildren<MeshRenderer>();
+            foreach (var mr in mrs)
+                mr.enabled = false;
         }
     }
 }

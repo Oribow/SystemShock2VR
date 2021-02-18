@@ -1,34 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.DebugHelper;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Events
 {
-    public abstract class BasicEventSender : MonoBehaviour
+    public abstract class BasicEventSender : MonoBehaviour, IEventSender
     {
         [SerializeField]
-        protected List<BasicEventReceiver> receivers = new List<BasicEventReceiver>();
+        protected List<MonoBehaviour> receivers = new List<MonoBehaviour>();
 
-        public void AddReceiver(BasicEventReceiver receiver)
+        public void AddReceiver(IEventReceiver receiver)
         {
-            receivers.Add(receiver);
+            receivers.Add(receiver as MonoBehaviour);
         }
 
-        public void RemoveReceiver(BasicEventReceiver receiver)
+        public void RemoveReceiver(IEventReceiver receiver)
         {
-            receivers.Remove(receiver);
+            receivers.Remove(receiver as MonoBehaviour);
         }
 
         protected void SendEvent(DarkEvent ev)
         {
             foreach (var r in receivers)
-                r.Receive(this, ev);
+                ((IEventReceiver)r)?.Receive(this, ev);
         }
 
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
+            Gizmos.DrawCube(transform.position, Vector3.one * 0.1f);
             foreach (var r in receivers)
             {
-                Gizmos.DrawLine(transform.position, r.transform.position);
+                if (r == null)
+                    continue;
+
+                DebugDrawingExtensions.DrawArrow(transform.position, r.gameObject.transform.position);
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Assets.Scripts.Editor.DarkEngine.ObjectInstantanceAdjusters
 
         public void Process(int index, DarkObject darkObject, DarkObjectCollection collection)
         {
-            if (darkObject.GetParentWithId(-2502) != null)
+            if (darkObject.GetParentWithId(-305) != null)
                 twc.Process(index, darkObject, collection);
         }
     }

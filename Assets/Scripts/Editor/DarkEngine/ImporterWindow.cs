@@ -86,6 +86,17 @@ namespace Assets.Scripts.Editor.DarkEngine
                 importer.Import(settings.selectedLevels);
             }
 
+            if (GUILayout.Button("Import Audio Assets"))
+            {
+                AudioFileRepository audioFileRepo = new AudioFileRepository();
+                audioFileRepo.BuildFileIndex(settings);
+
+                UnitySS2AssetRepository unitySS2AssetRepo = new UnitySS2AssetRepository(settings.overwriteFlags);
+
+                var importer = new AudioAssetImporter(levelFileRepo, unitySS2AssetRepo, audioFileRepo);
+                importer.Import(settings.selectedLevels);
+            }
+
             if (GUILayout.Button("Create Object Prefabs"))
             {
                 BinFileRepository binFileRepo = new BinFileRepository();
@@ -104,7 +115,10 @@ namespace Assets.Scripts.Editor.DarkEngine
 
                 UnitySS2AssetRepository unitySS2AssetRepo = new UnitySS2AssetRepository(settings.overwriteFlags);
 
-                var importer = new ObjectTreeLoader(levelFileRepo, unitySS2AssetRepo, binFileRepo);
+                AudioFileRepository audioClipRepo = new AudioFileRepository();
+                audioClipRepo.BuildFileIndex(settings);
+
+                var importer = new ObjectTreeLoader(levelFileRepo, unitySS2AssetRepo, binFileRepo, audioClipRepo);
                 importer.Load(settings.selectedLevels.First());
             }
         }

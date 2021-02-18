@@ -14,4 +14,22 @@ namespace Assets.Scripts.Editor.DarkEngine.DarkObjects.DarkLinks
 
         public abstract void Load(BinaryReader reader, int linkId);
     }
+
+    abstract class SimpleLinkData<T> : LinkData
+    {
+        public T Value { get; protected set; }
+
+        public override string ToString()
+        {
+            return $"\t{this.GetType().Name}={Value.ToString()}";
+        }
+    }
+
+    abstract class IntLinkData : SimpleLinkData<int>
+    {
+        public override void Load(BinaryReader reader, int linkId)
+        {
+            Value = reader.ReadInt32();
+        }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace Assets.Scripts.Events.Devices
 {
     public class TripWire : BasicEventSender
     {
+        [Flags]
         public enum TripControlFlags
         {
             Enter = 1,
@@ -20,7 +22,7 @@ namespace Assets.Scripts.Events.Devices
             EasterEgg1 = 512
         }
 
-        [SerializeField, HideInInspector]
+        [SerializeField]
         private TripControlFlags tripFlags;
 
 

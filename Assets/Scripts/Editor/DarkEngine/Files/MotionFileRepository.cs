@@ -18,7 +18,7 @@ namespace Assets.Scripts.Editor.DarkEngine.Files
         {
             return settings.DataFiles(".mi", ".mc").Select(entry =>
             {
-                string key = Path.GetFileName(entry.relativePath);
+                string key = Path.GetFileName(entry.relativePath).ToLower();
                 return new Tuple<string, SS2FileEntry>(key, entry);
             });
         }

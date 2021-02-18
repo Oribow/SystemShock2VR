@@ -16,6 +16,7 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
 
             Debug.Assert(darkObject.gameObject == null);
             darkObject.gameObject = g;
+            //AdjustPosition(darkObject);
             return g;
         }
 
@@ -49,15 +50,18 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
             return darkObject.gameObject;
         }
 
-        public static void ApplyCollider(DarkObject darkObject)
+        public static bool ApplyCollider(DarkObject darkObject)
         {
+            if (darkObject.gameObject.GetComponent<Collider>() != null)
+                return true;
+
             var type = darkObject.GetProp<PhysTypeProp>();
             var state = darkObject.GetProp<PhysStateProp>();
             var dim = darkObject.GetProp<PhysDimsProp>();
 
             if (type == null || state == null || dim == null)
             {
-                throw new DarkException("Can't apply collider due to missing props.");
+                return false;
             }
 
             switch (type.type)
@@ -72,8 +76,22 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
                     sphereCol.center = dim.offset[0];
                     sphereCol.radius = dim.radius[0];
                     break;
-
+                default:
+                    return false;
             }
+
+            return true;
+        }
+
+        public static Quaternion GetColliderRotation(DarkObject darkObject)
+        {
+            var state = darkObject.GetProp<PhysStateProp>();
+
+            if (state == null)
+            {
+                return Quaternion.identity;
+            }
+            return Quaternion.Euler(state.facing);
         }
 
         public static void AddComments(DarkObject dobj)
@@ -82,11 +100,11 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
             dobj.WriteAsComment(comment);
         }
 
-        public static void AdjustPosition(DarkObject dobj)
+        public static bool AdjustPosition(DarkObject dobj)
         {
             var propPos = dobj.GetProp<PositionProp>();
             if (propPos == null)
-                throw new DarkException("Tried to adjust position of object with no prop pos. " + dobj.ToString());
+                return false;
 
             Quaternion rotation = Quaternion.AngleAxis(propPos.facing.y, Vector3.up) *
                 Quaternion.AngleAxis(propPos.facing.z, Vector3.forward) *
@@ -105,6 +123,12 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
             dobj.gameObject.transform.localPosition = m.GetPosition();
             dobj.gameObject.transform.localRotation = rotation;
             dobj.gameObject.transform.localScale = m.lossyScale;
+            return true;
+        }
+
+        public static void AddKinematicRigidbody(DarkObject dObj)
+        {
+            dObj.gameObject.AddComponent<Rigidbody>().isKinematic = true;
         }
     }
 }

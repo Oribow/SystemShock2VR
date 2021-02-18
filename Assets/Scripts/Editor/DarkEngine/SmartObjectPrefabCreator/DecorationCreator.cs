@@ -42,15 +42,8 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
 
         public void Preprocess(int index, DarkObject darkObject, DarkObjectCollection collection)
         {
-            
-                PrefabCreatorUtil.CreateModelGOAt(darkObject, unitySS2AssetRepo, binFileRepo);
-            try
-            {
-                PrefabCreatorUtil.ApplyCollider(darkObject);
-            }
-            catch (DarkException)
-            {
-            }
+            PrefabCreatorUtil.CreateModelGOAt(darkObject, unitySS2AssetRepo, binFileRepo);
+            PrefabCreatorUtil.ApplyCollider(darkObject);
         }
 
         public void Process(int index, DarkObject darkObject, DarkObjectCollection collection)

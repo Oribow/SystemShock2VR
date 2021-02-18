@@ -217,6 +217,24 @@ namespace Assets.Scripts.Editor.DarkEngine.Files
             }
         }
 
+        public void CopyAudioClip(string absPath, string relPath)
+        {
+            string unityPath = ToUnityPath(relPath);
+
+            if (File.Exists(UnityFileSystem.UnityPathToAbsolute(unityPath)))
+                return;
+
+            UnityFileSystem.EnsureUnityPathExists(unityPath);
+            File.Copy(absPath, UnityFileSystem.UnityPathToAbsolute(unityPath));
+            AssetDatabase.ImportAsset(unityPath);
+        }
+
+        public AudioClip LoadAudioClip(string relPath)
+        {
+            string unityPath = ToUnityPath(relPath);
+            return AssetDatabase.LoadAssetAtPath<AudioClip>(unityPath);
+        }
+
         public bool DoesAssetExist(string path)
         {
             return UnityFileSystem.DoesAssetExist(ToUnityPath(path));

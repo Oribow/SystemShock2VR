@@ -123,9 +123,13 @@ namespace Assets.Scripts.Editor.DarkEngine.DarkObjects
             int dataLen = chunkReader.ReadInt32();
             while (chunkReader.BaseStream.Position < chunk.offsetPos + chunk.size)
             {
+                long expectedPos = chunkReader.BaseStream.Position + dataLen + 4;
+
                 int linkID = chunkReader.ReadInt32();
                 var data = new T();
                 data.Load(chunkReader, linkID);
+
+                Debug.Assert(expectedPos == chunkReader.BaseStream.Position, "Not at expected position. Delta = " + (expectedPos - chunkReader.BaseStream.Position) + ", Expected length = " + dataLen + ", Used Link Type = " + (typeof(T).Name));
 
                 var link = linkMap[linkID];
                 link.data = data;

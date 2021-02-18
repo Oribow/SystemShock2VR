@@ -23,6 +23,12 @@ namespace Assets.Scripts.Editor.DarkEngine.DarkObjects.DarkProps
     class MotActorTagsProp : CStringProp { }
     class CollisionTypeProp : EnumProp<CollisionFlags> { }
     class WeaponTypeProp : EnumProp<WeaponType> { }
+    class StartLocProp : IntProp { }
+    class DestLocProp : IntProp { }
+    class DestLevelProp : CStringProp { }
+    class HasRefsProp : BoolProp { }
+    class DelayTimeProp : FloatProp { }
+    class ObjSoundNameProp : CStringProp { }
 
     class PositionProp : ComplexProp {
         public Vector3 position;

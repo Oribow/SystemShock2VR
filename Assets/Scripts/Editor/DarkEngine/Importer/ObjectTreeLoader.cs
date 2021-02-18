@@ -17,12 +17,14 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
         LevelFileLoader levelFileLoader;
         UnitySS2AssetRepository unitySS2AssetRepo;
         BinFileRepository binFileRepo;
+        AudioFileRepository audioClipRepo;
 
-        public ObjectTreeLoader(LevelFileRepository levelFileRepo, UnitySS2AssetRepository unitySS2AssetRepo, BinFileRepository binFileRepo)
+        public ObjectTreeLoader(LevelFileRepository levelFileRepo, UnitySS2AssetRepository unitySS2AssetRepo, BinFileRepository binFileRepo, AudioFileRepository audioClipRepo)
         {
             this.levelFileLoader = new LevelFileLoader(levelFileRepo);
             this.unitySS2AssetRepo = unitySS2AssetRepo;
             this.binFileRepo = binFileRepo;
+            this.audioClipRepo = audioClipRepo;
         }
 
         public void Load(string selectedLevel)
@@ -47,6 +49,7 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
                 if (darkObj.Parent != null)
                 {
                     g = (GameObject)PrefabUtility.InstantiatePrefab(unitySS2AssetRepo.LoadProcessedObjPrefabAsset(darkObj.Parent.FullPath() + "_" + darkObj.Parent.id));
+                    g.name = darkObj.Name;
                 }
                 else
                 {
@@ -58,11 +61,11 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
                 PrefabCreatorUtil.AddComments(darkObj);
             }
 
-            for (int i = 0; i < objs.Length; i++)
+            foreach (var processor in processors)
             {
-                var darkObj = objs[i];
-                foreach (var processor in processors)
+                for (int i = 0; i < objs.Length; i++)
                 {
+                    var darkObj = objs[i];
                     processor.Process(i, darkObj, objectCollection);
                 }
             }
@@ -88,15 +91,29 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
             coll.LoadPropertyChunk<ScaleProp>(db);
             coll.LoadPropertyChunk<RenderTypeProp>(db);
             coll.LoadPropertyChunk<ImmobileProp>(db);
+            coll.LoadPropertyChunk<HasRefsProp>(db);
 
             coll.LoadPropertyChunk<PhysTypeProp>(db);
             coll.LoadPropertyChunk<PhysStateProp>(db);
             coll.LoadPropertyChunk<PhysDimsProp>(db);
 
             coll.LoadPropertyChunk<TripFlagsProp>(db);
+            coll.LoadPropertyChunk<DelayTimeProp>(db);
+
+            coll.LoadPropertyChunk<DestLevelProp>(db);
+            coll.LoadPropertyChunk<DestLocProp>(db);
+            coll.LoadPropertyChunk<StartLocProp>(db);
+
+            coll.LoadPropertyChunk<TransDoorProp>(db);
+
+            coll.LoadPropertyChunk<ObjSoundNameProp>(db);
 
             coll.LoadLinkAndDataChunk<MetaPropLink>(db);
+            coll.LoadLinkAndDataChunk<LandingPointLink>(db);
+            coll.LoadLinkAndDataChunk<TPathLink>(db);
+
             coll.LoadLinkChunk(db, "SwitchLink");
+            coll.LoadLinkChunk(db, "TPathInit");
         }
 
         private IObjectInstanceAdjustor[] CreateProcessors()
@@ -104,8 +121,21 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
             // order is from special to generic
             return new IObjectInstanceAdjustor[] {
                 new TripWireAdjustor(),
+                new MultiLevelAdjustor(),
+                new DoorAdjustor(),
+                new SpawnMarkerAdjustor(),
+                new TriggerDelayAdjustor(),
+                new DestroyTrapAdjustor(),
+                new ElevatorAdjustor(),
+                new SoundTrapAdjustor(audioClipRepo, unitySS2AssetRepo),
+                new InverterTrapAdjustor(),
+
+                // links
                 new SwitchLinkAdjustor(),
-                new ModelAdjustor(unitySS2AssetRepo, binFileRepo)
+                new LandingPointLinkAdjustor(),
+
+                // fallback model
+                new ModelAdjustor(unitySS2AssetRepo, binFileRepo),
             };
         }
 

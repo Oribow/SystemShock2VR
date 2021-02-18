@@ -8,13 +8,13 @@ using UnityEngine;
 
 namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
 {
-    class DoorProcessor : ISmartObjectPrefabCreator
+    class DoorCreator : ISmartObjectPrefabCreator
     {
         public void ApplyFlags(DarkObject darkObject, HashSet<Type> flags)
         {
             if (flags.Contains(typeof(DecorationCreator)) && darkObject.HasProp<TransDoorProp>())
             {
-                flags.Add(typeof(DoorProcessor));
+                flags.Add(typeof(DoorCreator));
             }
         }
 
@@ -32,14 +32,22 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
             TransDoorProp door = darkObject.GetProp<TransDoorProp>();
             GameObject g = darkObject.gameObject;
 
+            PrefabCreatorUtil.AddKinematicRigidbody(darkObject);
+            GameObjectUtility.SetStaticEditorFlags(g, 0);
             var doorComp = g.AddComponent<Door>();
-            SerializedObject so = new SerializedObject(doorComp);
 
-            so.FindProperty("closed").floatValue = door.closed;
-            so.FindProperty("open").floatValue = door.open;
-            so.FindProperty("speed").floatValue = door.baseSpeed;
+            SetDoorVars(doorComp, door);
+        }
 
-            switch (door.axis)
+        public static void SetDoorVars(Door door, TransDoorProp doorProp)
+        {
+            SerializedObject so = new SerializedObject(door);
+
+            so.FindProperty("closed").floatValue = doorProp.closed;
+            so.FindProperty("open").floatValue = doorProp.open;
+            so.FindProperty("speed").floatValue = doorProp.baseSpeed;
+
+            switch (doorProp.axis)
             {
                 case 0:
                     so.FindProperty("moveAxis").vector3Value = Vector3.left;
@@ -51,7 +59,7 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
                     so.FindProperty("moveAxis").vector3Value = Vector3.up;
                     break;
             }
-            so.FindProperty("status").enumValueIndex = (int)door.state;
+            so.FindProperty("status").enumValueIndex = (int)doorProp.state;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
     }

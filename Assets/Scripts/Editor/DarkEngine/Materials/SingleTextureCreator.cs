@@ -18,20 +18,20 @@ namespace Assets.Scripts.Editor.DarkEngine.Materials
         }
 
         const string litPath = "Assets/Materials/ss2Template_lit.mat";
+        const string litSpecularPath = "Assets/Materials/ss2Template_litSpecular.mat";
         const string unlitPath = "Assets/Materials/ss2Template_unlit.mat";
         const string transparentLitPath = "Assets/Materials/ss2Template_transparentLit.mat";
         const string cutOutLitPath = "Assets/Materials/ss2Template_cutOutLit.mat";
         const string emissiveLitPath = "Assets/Materials/ss2Template_emissiveLit.mat";
 
         Material litMat;
+        Material litSpecularMat;
         Material unlitMat;
         Material transparentLitMat;
         Material cutOutLitMat;
         Material emissiveLitMat;
 
-        Shader litSpecular = Shader.Find("Standard (Specular setup)");
-        Shader animTexArray = Shader.Find("SS2/AnimTexArray");
-        Shader animTexArrayEmissive = Shader.Find("SS2/AnimTexArrayEmissive");
+        Shader animTexArray = Shader.Find("Shader Graphs/AnimTexArray");
 
         ITextureFileLoader textureFileLoader;
 
@@ -42,6 +42,7 @@ namespace Assets.Scripts.Editor.DarkEngine.Materials
             transparentLitMat = AssetDatabase.LoadAssetAtPath<Material>(transparentLitPath);
             cutOutLitMat = AssetDatabase.LoadAssetAtPath<Material>(cutOutLitPath);
             emissiveLitMat = AssetDatabase.LoadAssetAtPath<Material>(emissiveLitPath);
+            litSpecularMat = AssetDatabase.LoadAssetAtPath<Material>(litSpecularPath);
             this.textureFileLoader = textureFileLoader;
         }
 
@@ -102,10 +103,15 @@ namespace Assets.Scripts.Editor.DarkEngine.Materials
             Material mat = null;
             if (tex is Texture2DArray)
             {
+                mat = new Material(animTexArray);
                 if (emissive)
-                    mat = new Material(animTexArrayEmissive);
+                {
+                    mat.SetFloat("_EmissionIntensity", 1);
+                }
                 else
-                    mat = new Material(animTexArray);
+                {
+                    mat.SetFloat("_EmissionIntensity", 0);
+                }
                 mat.SetTexture("_MainTexArr", tex);
                 mat.SetInt("_FrameCount", ((Texture2DArray)tex).depth);
             }
@@ -163,17 +169,17 @@ namespace Assets.Scripts.Editor.DarkEngine.Materials
             switch (mtl.uMaterial)
             {
                 case MTL.UMaterial.Standard_Specular:
-                    mat = new Material(litSpecular);
+                    /*mat = new Material(litSpecularMat);
 
                     foreach (var rp in mtl.renderPasses)
                     {
                         if (rp.uType == DarkRenderPass.UType.Specular)
                         {
                             var specTex = LoadTexture(rp.texturePaths[0], unitySS2AssetRepo);
-                            mat.SetTexture("_SpecGlossMap", specTex);
+                            mat.SetTexture("_MaskMap", specTex);
                         }
                     }
-                    break;
+                    break;*/
                 case MTL.UMaterial.Standard:
                     mat = new Material(litMat);
                     break;

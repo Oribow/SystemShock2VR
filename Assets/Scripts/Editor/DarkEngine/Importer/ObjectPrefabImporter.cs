@@ -122,7 +122,10 @@ namespace Assets.Scripts.Editor.DarkEngine.Importer
 
                 // default stuff
                 new DecorationCreator(unitySS2AssetRepo, binFileRepo),
-                new DoorProcessor(),
+                new DoorCreator(),
+                new PlayerTeleportTrapCreator(),
+                new ButtonCreator(),
+                new QBitFilterCreator(),
                 new FallbackCreator()
             };
         }

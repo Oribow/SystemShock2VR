@@ -18,6 +18,7 @@ namespace Assets.Scripts.Editor.DarkEngine.Materials
             mat.SetFloat("_Bias", wave.bias);
             mat.SetFloat("_Amplitude", wave.amplitude);
             mat.SetFloat("_Frequency", wave.frequency / 1000);
+            mat.SetColor("_Color", tint);
             return mat;
         }
 

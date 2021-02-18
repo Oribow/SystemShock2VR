@@ -13,8 +13,9 @@ namespace Assets.Scripts.Editor.DarkEngine.Materials
             var texArray = MTLConverterUtility.AssignTextureArray(mat, "_MainTexArr", mtl.renderPasses[0].texturePaths[0], unitySS2AssetRepo);
             int frameCount = texArray.depth;
 
-            mat.SetFloat("_FrameCount", frameCount);
+            mat.SetFloat("_TexCount", frameCount);
             mat.SetFloat("_FPS", 1000.0f / mtl.renderPasses[0].aniRate);
+            mat.SetFloat("_EmissionIntensity", 1);
             return mat;
         }
 

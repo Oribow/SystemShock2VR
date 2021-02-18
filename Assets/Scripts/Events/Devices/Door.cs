@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Events.Devices
 {
-    public class Door : BasicEventReceiver
+    public class Door : MonoBehaviour, IEventReceiver
     {
         public enum DoorStatus
         {
@@ -84,7 +84,7 @@ namespace Assets.Scripts.Events.Devices
             status = DoorStatus.Closed;
         }
 
-        public override void Receive(BasicEventSender sender, DarkEvent darkEvent)
+        public void Receive(IEventSender sender, DarkEvent darkEvent)
         {
             if (darkEvent.State && (status == DoorStatus.Closed || status == DoorStatus.Closing))
             {

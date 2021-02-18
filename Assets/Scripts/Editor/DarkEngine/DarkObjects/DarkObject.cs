@@ -103,7 +103,7 @@ namespace Assets.Scripts.Editor.DarkEngine.DarkObjects
             }
             links.Add(link);
 
-            if (linkDataType == typeof(MetaPropLink) && ((MetaPropLink)link.data).priority == 0)
+            if (linkDataType == typeof(MetaPropLink) && ((MetaPropLink)link.data).Value == 0)
                 linkToParent = link;
         }
 
@@ -115,7 +115,10 @@ namespace Assets.Scripts.Editor.DarkEngine.DarkObjects
 
         public List<Link> GetLinks(Type linkType)
         {
-            return datalinkMap[linkType];
+            List<Link> links;
+            if (datalinkMap.TryGetValue(linkType, out links))
+                return links;
+            return new List<Link>(0);
         }
 
         public List<Link> GetLinks(string linkName)
