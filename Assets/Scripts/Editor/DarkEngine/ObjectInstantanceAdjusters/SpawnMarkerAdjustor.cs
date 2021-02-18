@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.Editor.DarkEngine.DarkObjects;
 using Assets.Scripts.Editor.DarkEngine.DarkObjects.DarkProps;
-using Assets.Scripts.Player;
 using UnityEditor;
 
 namespace Assets.Scripts.Editor.DarkEngine.ObjectInstantanceAdjusters
@@ -12,11 +11,11 @@ namespace Assets.Scripts.Editor.DarkEngine.ObjectInstantanceAdjusters
             if (!darkObject.HasProp<StartLocProp>())
                 return;
 
-            var darkObj = darkObject.gameObject.AddComponent<SpawnMarker>();
+            //var darkObj = darkObject.gameObject.AddComponent<SpawnMarker>();
 
-            var so = new SerializedObject(darkObj);
-            so.FindProperty("locationId").intValue = darkObject.GetProp<StartLocProp>().Value;
-            so.ApplyModifiedPropertiesWithoutUndo();
+            //var so = new SerializedObject(darkObj);
+            //so.FindProperty("locationId").intValue = darkObject.GetProp<StartLocProp>().Value;
+            //so.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }

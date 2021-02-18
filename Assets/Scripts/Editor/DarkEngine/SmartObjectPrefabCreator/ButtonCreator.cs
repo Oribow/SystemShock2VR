@@ -8,7 +8,6 @@ using Assets.Scripts.Editor.DarkEngine.DarkObjects.DarkProps;
 using Assets.Scripts.Editor.DarkEngine.Exceptions;
 using Assets.Scripts.Events.Devices;
 using UnityEngine;
-using Valve.VR.InteractionSystem;
 
 namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
 {
@@ -40,7 +39,6 @@ namespace Assets.Scripts.Editor.DarkEngine.SmartObjectPrefabCreator
             }
 
             darkObject.gameObject.AddComponent<Button>();
-            darkObject.gameObject.AddComponent<Interactable>();
             darkObject.gameObject.layer = 9;
 
             PrefabCreatorUtil.ApplyCollider(darkObject);

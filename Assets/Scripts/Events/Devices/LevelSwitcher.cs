@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Player;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Events.Devices
 {
@@ -10,8 +9,7 @@ namespace Assets.Scripts.Events.Devices
 
         public void Receive(IEventSender sender, DarkEvent ev)
         {
-            PlayerHolder.Instance.TeleportOnLevelLoad.SetTargetPosition(destLoc);
-            GetComponent<Valve.VR.SteamVR_LoadLevel>().Trigger();
+            // IOU: Level switching logic
         }
     }
 }

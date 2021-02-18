@@ -2,7 +2,6 @@
 using Assets.Scripts.Editor.DarkEngine.DarkObjects.DarkProps;
 using Assets.Scripts.Events.Devices;
 using UnityEditor;
-using Valve.VR;
 
 namespace Assets.Scripts.Editor.DarkEngine.ObjectInstantanceAdjusters
 {
@@ -17,12 +16,6 @@ namespace Assets.Scripts.Editor.DarkEngine.ObjectInstantanceAdjusters
                 return;
 
             var lw = darkObject.gameObject.AddComponent<LevelSwitcher>();
-            var svll = darkObject.gameObject.AddComponent<SteamVR_LoadLevel>();
-
-            svll.levelName = destLevel.Value;
-            svll.autoTriggerOnEnable = false;
-            svll.postLoadSettleTime = 1;
-            svll.loadAsync = false;
 
             var so = new SerializedObject(lw);
 
